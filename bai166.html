@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Lab 16 - Bộ Đếm Neon Hướng Đối Tượng</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        body { background: #0f172a; color: #f8fafc; font-family: monospace; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .khung-bo-dem { background: #1e293b; border: 2px solid #38bdf8; padding: 40px; border-radius: 16px; text-align: center; box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); width: 320px; }
+        .man-hinh { background: #020617; border-radius: 8px; padding: 20px; margin: 20px 0; border: 1px solid #1e293b; overflow: hidden; }
+        #so-dem { font-size: 4.5rem; font-weight: bold; color: #38bdf8; text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); }
+        .luoi-nut-bam { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .nut-cyber { background: transparent; border: 1px solid #64748b; color: #94a3b8; padding: 12px; cursor: pointer; border-radius: 4px; font-weight: bold; font-family: monospace; transition: all 0.2s; }
+        .nut-cyber:hover { border-color: #38bdf8; color: #38bdf8; box-shadow: 0 0 8px rgba(56, 189, 248, 0.3); }
+        .tang-kich-hoat { color: #34d399 !important; text-shadow: 0 0 15px #34d399 !important; }
+        .giam-kich-hoat { color: #f87171 !important; text-shadow: 0 0 15px #f87171 !important; }
+    </style>
+</head>
+<body>
+
+<div class="khung-bo-dem">
+    <div> HỆ THỐNG ĐẾM SỐ </div>
+    <div class="man-hinh"><span id="so-dem">0</span></div>
+    <div class="luoi-nut-bam">
+        <button class="nut-cyber" data-hanh-dong="giam">GIẢM (-)</button>
+        <button class="nut-cyber" data-hanh-dong="tang">TĂNG (+)</button>
+        <button class="nut-cyber" data-hanh-dong="tang-nhanh" style="grid-column: span 2">TĂNG NHANH (+10)</button>
+        <button class="nut-cyber" data-hanh-dong="dat-lai" style="grid-column: span 2; border-color: rgba(248,113,113,0.4)">KHỞI ĐỘNG LẠI</button>
+    </div>
+</div>
+
+<script>
+    
+const UngDungDem = {
+    giaTri: 0,
+    phanTuHienThi: $('#so-dem'),
+    
+    khoiTao: function() {
+        this.langNgheSuKien();
+    },
+    langNgheSuKien: function() {
+        const phamVi = this;
+        $('.nut-cyber').click(function() {
+            const hanhDong = $(this).data('hanh-dong');
+            phamVi.xuLyLogic(hanhDong);
+        });
+    },
+    xuLyLogic: function(hanhDong) {
+        if (hanhDong === 'tang') this.giaTri++;
+        else if (hanhDong === 'giam') {
+            if(this.giaTri <= 0) return;
+            this.giaTri--;
+        }
+        else if (hanhDong === 'tang-nhanh') this.giaTri += 10;
+        else if (hanhDong === 'dat-lai') this.giaTri = 0;
+        
+        this.capNhatGiaoDien(hanhDong);
+    },
+    capNhatGiaoDien: function(hanhDong) {
+
+        this.phanTuHienThi.text(this.giaTri).hide().fadeIn(150);
+        
+        if (hanhDong === 'tang' || hanhDong === 'tang-nhanh') {
+            this.phanTuHienThi.addClass('tang-kich-hoat').removeClass('giam-kich-hoat');
+        } else if (hanhDong === 'giam') {
+            this.phanTuHienThi.addClass('giam-kich-hoat').removeClass('tang-kich-hoat');
+        } else {
+            this.phanTuHienThi.removeClass('tang-kich-hoat giam-kich-hoat');
+        }
+    }
+};
+
+$(document).ready(function() {
+    UngDungDem.khoiTao();
+});
+</script>
+</body>
+</html>

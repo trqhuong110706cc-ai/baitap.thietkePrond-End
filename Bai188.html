@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Lab 18 - Quản Lý Nhân Sự Hệ Thống</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        body { background: #0c0a09; color: #e7e5e4; font-family: system-ui, sans-serif; padding: 40px 20px; }
+        .bang-dieu-khien { max-width: 450px; margin: 0 auto; background: #1c1917; border: 1px solid #44403c; border-radius: 8px; padding: 20px; }
+        .o-nhap-lieu { display: flex; gap: 6px; margin-bottom: 20px; }
+        .o-nhap-lieu input { flex: 1; background: #292524; border: 1px solid #44403c; border-radius: 6px; padding: 10px 14px; color: #fff; outline: none; }
+        .o-nhap-lieu input:focus { border-color: #f59e0b; }
+        .nut-them-moi { background: #f59e0b; color: #0c0a09; border: none; padding: 0 16px; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        
+        .danh-sach-hop { display: flex; flex-direction: column; gap: 8px; }
+        .the-thanh-vien { display: flex; justify-content: space-between; align-items: center; background: #292524; padding: 12px 16px; border-radius: 6px; display: none; /* Phục vụ cho hiệu ứng trượt slideDown */ }
+        .so-thu-tu { font-weight: bold; color: #a8a29e; margin-right: 10px; }
+        .ten-thanh-vien { flex: 1; color: #f5f5f4; }
+        .nhom-nut-chuc-nang button { background: none; border: 1px solid #44403c; color: #a8a29e; padding: 4px 8px; font-size: 0.8rem; cursor: pointer; border-radius: 4px; margin-left: 4px; }
+        .nhom-nut-chuc-nang button:hover { background: #44403c; color: #fff; }
+    </style>
+</head>
+<body>
+
+<div class="bang-dieu-khien">
+    <p style="color: #a8a29e; font-size: 0.85rem; margin-bottom: 12px;">// NHẬT KÝ QUẢN LÝ THÀNH VIÊN</p>
+    <div class="o-nhap-lieu">
+        <input type="text" id="nhap-ten-nv" placeholder="Nhập tên thành viên mới...">
+        <button class="nut-them-moi" id="hanh-dong-them">THÊM</button>
+    </div>
+
+    <div class="danh-sach-hop" id="vung-chua-danh-sach">
+        <!-- Dữ liệu sẽ được tự động chèn vào đây -->
+    </div>
+</div>
+
+<!-- KHU VỰC CHỨA CẤU TRÚC MẪU (TEMPLATE HTML THUẦN VIỆT) -->
+<template id="mau-thanh-vien">
+    <div class="the-thanh-vien">
+        <div>
+            <span class="so-thu-tu"></span>
+            <span class="ten-thanh-vien"></span>
+        </div>
+        <div class="nhom-nut-chuc-nang">
+            <button class="nut-chinh-sua">SỬA</button>
+            <button class="nut-xoa-bo" style="color: #ef4444;">XÓA</button>
+        </div>
+    </div>
+</template>
+
+<script>
+$(document).ready(function() {
+    
+    function lamMoiSoThuTu() {
+        $('#vung-chua-danh-sach .the-thanh-vien').each(function(viTri) {
+            $(this).find('.so-thu-tu').text(`[#${viTri + 1}]`);
+        });
+    }
+
+    $('#hanh-dong-them').click(function() {
+        let tenNhap vao = $('#nhap-ten-nv').val().trim();
+        if(!tenNhapVao) return;
+
+        let cauTrucMau = $('#mau-thanh-vien').html();
+        let banSao = $(cauTrucMau);
+
+        banSao.find('.ten-thanh-vien').text(tenNhapVao);
+
+        $('#vung-chua-danh-sach').append(banSao);
+        banSao.slideDown(250);
+        
+        $('#nhap-ten-nv').val('');
+        lamMoiSoThuTu();
+    });
+
+    $('#vung-chua-danh-sach').on('click', '.nut-xoa-bo', function() {
+        let theCanXoa = $(this).closest('.the-thanh-vien');
+        
+        theCanXoa.slideUp(200, function() {
+            $(this).remove();
+            lamMoiSoThuTu();
+        });
+    });
+
+    $('#vung-chua-danh-sach').on('click', '.nut-chinh-sua', function() {
+        let theTen = $(this).closest('.the-thanh-vien').find('.ten-thanh-vien');
+        let tenMoi = prompt("Cập nhật lại họ tên thành viên:", theTen.text());
+        
+        if(tenMoi && tenMoi.trim() !== "") {
+            theTen.text(tenMoi.trim());
+        }
+    });
+});
+</script>
+</body>
+</html>

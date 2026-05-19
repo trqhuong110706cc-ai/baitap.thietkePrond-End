@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Lab 17 - Giỏ Hàng Công Nghệ</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        body { background: #0b0f19; color: #94a3b8; font-family: system-ui, sans-serif; padding: 40px 20px; }
+        .khung-gio-hang { max-width: 600px; margin: 0 auto; background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 24px; }
+        h3 { color: #f3f4f6; margin-top: 0; font-size: 1.2rem; border-bottom: 1px solid #1f2937; padding-bottom: 12px; }
+        .hang-san-pham { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px dashed #1f2937; }
+        .thong-tin { flex: 1; }
+        .ten-sp { color: #f9fafb; font-weight: 600; }
+        .mo-ta-sp { font-size: 0.85rem; color: #4b5563; margin-top: 2px; }
+        .o-so-luong { display: flex; align-items: center; gap: 2px; background: #1f2937; border-radius: 6px; padding: 2px; }
+        .nut-tang-giam { background: none; border: none; color: #94a3b8; width: 28px; height: 28px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        .nut-tang-giam:hover { background: #374151; color: #f3f4f6; }
+        .so-luong-hien-tai { width: 30px; text-align: center; font-size: 0.9rem; color: #f3f4f6; }
+        .thanh-tien { width: 120px; text-align: right; color: #a78bfa; font-weight: bold; }
+        .tong-ket { margin-top: 20px; display: flex; justify-content: space-between; align-items: center; background: #1f2937; padding: 16px; border-radius: 8px; }
+        #hien-thi-tong { color: #10b981; font-size: 1.4rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="khung-gio-hang">
+    <h3>DANH SÁCH GIỎ HÀNG SỐ</h3>
+    
+    <!-- Sản phẩm 1 -->
+    <div class="hang-san-pham" data-gia="200000">
+        <div class="thong-tin">
+            <div class="ten-sp">Ổ Cứng SSD NVMe 500GB</div>
+            <div class="mo-ta-sp">Đơn giá: 200,000 đ</div>
+        </div>
+        <div class="o-so-luong">
+            <button class="nut-tang-giam" data-thay-doi="-1">-</button>
+            <span class="so-luong-hien-tai">1</span>
+            <button class="nut-tang-giam" data-thay-doi="1">+</button>
+        </div>
+        <div class="thanh-tien">200,000 đ</div>
+    </div>
+
+    <!-- Sản phẩm 2 -->
+    <div class="hang-san-pham" data-gia="750000">
+        <div class="thong-tin">
+            <div class="ten-sp">Thanh RAM Máy Tính 16GB</div>
+            <div class="mo-ta-sp">Đơn giá: 750,000 đ</div>
+        </div>
+        <div class="o-so-luong">
+            <button class="nut-tang-giam" data-thay-doi="-1">-</button>
+            <span class="so-luong-hien-tai">1</span>
+            <button class="nut-tang-giam" data-thay-doi="1">+</button>
+        </div>
+        <div class="thanh-tien">750,000 đ</div>
+    </div>
+
+    <div class="tong-ket">
+        <span>TỔNG TIỀN THANH TOÁN:</span>
+        <span id="hien-thi-tong">0 đ</span>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    const BoQuanLyGioHang = {
+        thayDoiSoLuong: function(hang, mucThayDoi) {
+            let phanTuSoLuong = hang.find('.so-luong-hien-tai');
+            let soLuongCu = parseInt(phanTuSoLuong.text());
+            let soLuongMoi = soLuongCu + mucThayDoi;
+            
+            if (soLuongMoi < 1) return; 
+            
+            phanTuSoLuong.text(soLuongMoi);
+            this.tinhToanToanBo();
+        },
+        tinhToanToanBo: function() {
+            let tongHoaDon = 0;
+            $('.hang-san-pham').each(function() {
+                let giaTien = $(this).data('gia');
+                let soLuong = parseInt($(this).find('.so-luong-hien-tai').text());
+                let thanhTien = giaTien * soLuong;
+                
+                $(this).find('.thanh-tien').text(thanhTien.toLocaleString('vi-VN') + " đ");
+                tongHoaDon += thanhTien;
+            });
+            $('#hien-thi-tong').text(tongHoaDon.toLocaleString('vi-VN') + " đ");
+        }
+    };
+
+    $('.nut-tang-giam').click(function() {
+        let mucThayDoi = $(this).data('thay-doi');
+        let hangHienTai = $(this).closest('.hang-san-pham');
+        BoQuanLyGioHang.thayDoiSoLuong(hangHienTai, mucThayDoi);
+    });
+
+    BoQuanLyGioHang.tinhToanToanBo();
+});
+</script>
+</body>
+</html>
